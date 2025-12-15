@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.G.R. - Escola Manain</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div id="sidebar" class="sidebar no-print">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-archive"></i> ARQUIVO</h3>
+            <button onclick="toggleSidebar()" class="btn-fechar-sidebar"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="busca-container">
+            <input type="text" id="buscaAluno" placeholder="🔍 Buscar aluno..." onkeyup="filtrarLista()">
+        </div>
+        <div id="lista-alunos" class="lista-alunos-salvos"></div>
+    </div>
+
+    <div class="controles-topo no-print">
+        <div class="grupo-botoes-esq">
+            <button onclick="toggleSidebar()" class="btn-sistema btn-azul"><i class="fas fa-folder-open"></i> MEUS RELATÓRIOS</button>
+            <button onclick="novoRelatorio()" class="btn-sistema btn-perigo"><i class="fas fa-plus-circle"></i> NOVO ALUNO</button>
+        </div>
+        
+        <div class="grupo-botoes-dir">
+            <button onclick="salvarNoBanco()" id="btnSalvar" class="btn-sistema btn-verde"><i class="fas fa-save"></i> SALVAR / ATUALIZAR</button>
+            <button onclick="window.print()" class="btn-sistema btn-imprimir"><i class="fas fa-print"></i> IMPRIMIR</button>
+        </div>
+    </div>
+
+    <table class="tabela-impressao">
+        <thead>
+            <tr>
+                <td>
+                    <header class="cabecalho-oficial">
+                        <div class="logo-container">
+                            <img src="col.png" alt="Logo" class="logo-img">
+                        </div>
+                        <div class="texto-cabecalho">
+                            <h2 class="nome-mantenedora">CENTRO OCUPACIONAL DE LONDRINA</h2>
+                            <h3 class="nome-escola">Escola Manain - Educação Infantil e Ensino Fundamental,<br>na Modalidade Educação Especial</h3>
+                            <div class="dados-legais">
+                                <p>Fundado Em 22/06/1985 - CNPJ 78.962.263/0001-79</p>
+                                <p>Utilidade Pública Municipal Lei Nº 3.956 de 24/04/1987</p>
+                            </div>
+                        </div>
+                    </header>
+                </td>
+            </tr>
+        </thead>
+        <tfoot><tr><td><div class="rodape-spacer"></div></td></tr></tfoot>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="conteudo-principal">
+                        
+                        <div class="titulo-documento">
+                            <h1>RELATÓRIO DE AVALIAÇÃO DE INGRESSO</h1>
+                            <input type="hidden" id="reportId">
+                        </div>
+
+                        <section class="quadro-principal">
+                            <div class="titulo-sessao">1. DADOS DE IDENTIFICAÇÃO</div>
+                            <div class="corpo-sessao">
+                                <div class="grid-identificacao">
+                                    <div class="campo"><label>NRE:</label><input type="text" id="nre" value="LONDRINA" readonly></div>
+                                    <div class="campo"><label>Município:</label><input type="text" id="municipio" value="LONDRINA" readonly></div>
+                                    <div class="campo full-width"><label>Escola:</label><input type="text" id="escola" value="ESCOLA MANAIN" readonly></div>
+                                    
+                                    <div class="campo full-width"><label>Estudante:</label><input type="text" id="nomeEstudante" placeholder="Nome completo do estudante"></div>
+                                    
+                                    <div class="campo"><label>Data Nasc.:</label><input type="date" id="dataNascimento"></div>
+                                    <div class="campo"><label>Idade:</label><input type="text" id="idade" readonly class="bg-gray"></div>
+                                    
+                                    <div class="campo full-width"><label>Filiação:</label><input type="text" id="filiacao"></div>
+                                    <div class="campo"><label>Data Avaliação:</label><input type="date" id="dataAvaliacao"></div>
+                                    
+                                    </div>
+                            </div>
+                        </section>
+
+                        <div class="titulo-sessao">2. SÍNTESE DAS ÁREAS AVALIADAS</div>
+
+                        <section class="quadro-principal">
+                            <div class="cabecalho-interno"><h4>2.1 AVALIAÇÃO PEDAGÓGICA</h4><p class="subtexto">Habilidades conceituais, cognitivas e acadêmicas.</p></div>
+                            <div class="corpo-sessao">
+                                <div class="area-interativa no-print">
+                                    <button onclick="abrirModal('pedagogica')" class="btn-sistema btn-checklist"><i class="fas fa-list-check"></i> Checklist Pedagógico</button>
+                                    <span id="status-pedagogica" class="status pendente">Pendente</span>
+                                </div>
+                                <textarea id="texto-pedagogica" style="display:none"></textarea> 
+                            </div>
+                        </section>
+
+                        <section class="quadro-principal">
+                            <div class="cabecalho-interno"><h4>2.2 AVALIAÇÃO CLÍNICA</h4><p class="subtexto">Desempenho clínico, saúde e autonomia.</p></div>
+                            <div class="corpo-sessao">
+                                <div class="area-interativa no-print">
+                                    <button onclick="abrirModal('clinica')" class="btn-sistema btn-checklist"><i class="fas fa-user-md"></i> Checklist Clínico</button>
+                                    <span id="status-clinica" class="status pendente">Pendente</span>
+                                </div>
+                                <textarea id="texto-clinica" style="display:none"></textarea>
+                            </div>
+                        </section>
+
+                        <section class="quadro-principal">
+                            <div class="cabecalho-interno"><h4>2.3 AVALIAÇÃO DO SERVIÇO SOCIAL</h4><p class="subtexto">Entrevistas e observações.</p></div>
+                            <div class="corpo-sessao">
+                                <div class="area-interativa no-print">
+                                    <button onclick="abrirModal('social')" class="btn-sistema btn-checklist"><i class="fas fa-home"></i> Checklist Social</button>
+                                    <span id="status-social" class="status pendente">Pendente</span>
+                                </div>
+                                <textarea id="texto-social" style="display:none"></textarea>
+                            </div>
+                        </section>
+
+                        <section class="quadro-principal">
+                            <div class="corpo-sessao">
+                                <div class="bloco-final">
+                                    <div class="controles-linha no-print">
+                                        <label>CONCLUSÃO DIAGNÓSTICA:</label>
+                                        <button onclick="gerarConclusaoAutomatica()" class="btn-mini"><i class="fas fa-magic"></i> Gerar Texto Automático</button>
+                                    </div>
+                                    <label class="print-only">3. CONCLUSÃO DIAGNÓSTICA:</label>
+                                    <textarea id="final-conclusao" rows="4"></textarea>
+                                </div>
+                                <div class="bloco-final"><label>4. INDICAÇÕES PEDAGÓGICAS:</label><textarea id="final-indicacoes" rows="3"></textarea></div>
+                                <div class="bloco-final"><label>5. ENCAMINHAMENTOS:</label><textarea id="final-encaminhamentos" rows="2"></textarea></div>
+                                <div class="bloco-final"><label>6. OBSERVAÇÕES COMPLEMENTARES:</label><textarea id="final-observacoes" rows="2"></textarea></div>
+                            </div>
+                        </section>
+
+                        <div class="assinaturas-final">
+                            <p class="data-extenso">Londrina, <span id="dataAtual"></span>.</p>
+                            
+                            <div class="assinaturas-grid">
+                                
+                                <div class="assinatura-box">
+                                    <select id="sel_pedagoga" class="select-assinatura no-print" onchange="mudarAssinatura('pedagoga')"></select>
+                                    <div id="container_img_pedagoga"><img id="img_pedagoga" src="" alt="Assinatura" class="img-assinatura"></div>
+                                    <p id="cargo_pedagoga" class="cargo">Pedagoga</p>
+                                </div>
+
+                                <div class="assinatura-box">
+                                    <select id="sel_psicologa" class="select-assinatura no-print" onchange="mudarAssinatura('psicologa')"></select>
+                                    <div id="container_img_psicologa"><img id="img_psicologa" src="" alt="Assinatura" class="img-assinatura"></div>
+                                    <p id="cargo_psicologa" class="cargo">Psicóloga</p>
+                                </div>
+
+                                <div class="assinatura-box">
+                                    <select id="sel_social" class="select-assinatura no-print" onchange="mudarAssinatura('social')"></select>
+                                    <div id="container_img_social"><img id="img_social" src="" alt="Assinatura" class="img-assinatura"></div>
+                                    <p id="cargo_social" class="cargo">Assistente Social</p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="rodape-fixo" class="rodape-fixo">
+        <div class="endereco-oficial">
+            <p>Rua das Açucenas Nº. 100 - Jd. Colina Verde - Fone/Fax: (43) 3328-4415.</p>
+            <p>CEP: 86050-570 - Londrina/PR  |  centroocupacional.secretaria@gmail.com</p>
+        </div>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-box grande">
+            <div class="modal-header">
+                <h3 id="modalTitulo">Checklist</h3>
+                <button onclick="fecharModal()" class="btn-fechar"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="coluna-checklist">
+                    <h4><i class="fas fa-check-double"></i> Selecione os itens:</h4>
+                    <div id="container-checklist"></div>
+                </div>
+                <div class="coluna-textos">
+                    <label class="label-azul">1. Texto do Relatório:</label>
+                    <textarea id="modalTexto" rows="8"></textarea>
+                    <label class="label-azul" id="labelExtra">2. Encaminhamentos/Indicações:</label>
+                    <textarea id="modalExtra" rows="8"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="salvarModal()" class="btn-sistema btn-salvar"><i class="fas fa-check"></i> CONFIRMAR E FECHAR</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKSuLwOvIr86m_dowL_LLBQImFfrLTdm8",
+            authDomain: "sgrescolamanaim.firebaseapp.com",
+            projectId: "sgrescolamanaim",
+            storageBucket: "sgrescolamanaim.firebasestorage.app",
+            messagingSenderId: "991196529384",
+            appId: "1:991196529384:web:af73de52416097bd6b3f5d",
+            measurementId: "G-SBC0HEE2NN"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+
+</body>
+</html>
